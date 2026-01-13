@@ -4,14 +4,13 @@ import subprocess
 import sys
 
 
-def run_identify_output(env=None):
+def run_identify_output(env={}):
     cmd = os.path.join(
         os.path.dirname(__file__), "..", "..", "..", "libqtile", "scripts", "main.py"
     )
     argv = [sys.executable, cmd, "x11-identify-output"]
 
-    if env is None:
-        env = os.environ.copy()
+    env = os.environ.copy() | env
 
     proc = subprocess.Popen(argv, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env)
     stdout, stderr = proc.communicate()
