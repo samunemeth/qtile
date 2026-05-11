@@ -43,9 +43,10 @@ class DF(base.InLoopPollText):
     def poll(self):
         statvfs = os.statvfs(self.partition)
 
-        size = statvfs.f_frsize * statvfs.f_blocks // self.calc
-        free = statvfs.f_frsize * statvfs.f_bfree // self.calc
-        self.user_free = statvfs.f_frsize * statvfs.f_bavail // self.calc
+        size = statvfs.f_frsize * statvfs.f_blocks / self.calc
+        free = statvfs.f_frsize * statvfs.f_bfree / self.calc
+        self.user_free = statvfs.f_frsize * statvfs.f_bavail / self.calc
+        used = size - free
 
         if self.visible_on_warn and self.user_free >= self.warn_space:
             text = ""
@@ -54,6 +55,7 @@ class DF(base.InLoopPollText):
                 p=self.partition,
                 s=size,
                 f=free,
+                u=used,
                 uf=self.user_free,
                 m=self.measure,
                 r=(size - self.user_free) / size * 100,
